@@ -1,0 +1,29 @@
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.example: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: metrics-topic
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    driverClassName: org.postgresql.Driver
+    username: dima
+    password: 1607
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+kafka:
+  topic:
+    metrics: metrics-topic
