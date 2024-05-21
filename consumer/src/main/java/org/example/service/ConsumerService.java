@@ -1,10 +1,6 @@
 package org.example.service;
 
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.model.Metric;
 import org.example.repository.ConsumerMetricRepository;
@@ -19,29 +15,22 @@ public class ConsumerService {
   private final ConsumerMetricRepository consumerMetricRepository;
 
   @Autowired
-  ConsumerService(ConsumerMetricRepository consumerMetricRepository){
+  ConsumerService(ConsumerMetricRepository consumerMetricRepository) {
     this.consumerMetricRepository = consumerMetricRepository;
   }
 
   @KafkaListener(topics = "metrics-topic", groupId = "metrics-group")
-  public void consume(Map<String, Object> metric) {
-    log.info("Consum metric {}", metric.toString());
-    Metric metrics = new Metric();
-    metrics.setName(metric.get("name").toString());
-    metrics.setType(metric.get("type").toString());
-    metrics.setTags(Arrays.asList((String[]) metric.get("tags"))); // Преобразование обратно в массив строк
-    metrics.setValue(Double.valueOf(metric.get("value").toString()));
-    metrics.setTimestamp(Instant.now());
-    consumerMetricRepository.save(metrics);
+  public void consume(Metric metric) {
+    log.info("Consume metric {}", metric.toString());
+    consumerMetricRepository.save(metric);
   }
 
 
-  public List<Metric> getAllMetric(){
+  public List<Metric> getAllMetric() {
     return consumerMetricRepository.findAll();
   }
 
-  public Optional<Metric> getMetricByName(String name){
+  public List<Metric> getMetricByName(String name) {
     return consumerMetricRepository.findByName(name);
   }
-
 }
